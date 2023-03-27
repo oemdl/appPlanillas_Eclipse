@@ -30,18 +30,19 @@ import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
 import java.awt.Font;
 
 public class frmDepartamento extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 
 	util.Util util = new util.Util();
-	bean.Cargo cargo = new bean.Cargo();
-	dao.daoCargo daoCargo = new dao.daoCargo();
+	bean.Departamento departamento = new bean.Departamento();
+	dao.daoDepartamento daoDepartamento = new dao.daoDepartamento();
 	
 	JPanel pnlRegistros;
 	JTable tblRegistros;
-	JTextField txtBuscar, txtCodigo, txtDetalle;
+	JTextField txtBuscar, txtCodigo, txtRazonSocial, txtCuenta;
 	JTextField txtEstado, txtFechaCreacion, txtFechaEdicion;
 	JLabel lblEstado, lblFechaCreacion, lblFechaEdicion;
 	JButton btnAgregar, btnEditar, btnEliminar, btnGuardar, btnCancelar;
@@ -53,8 +54,8 @@ public class frmDepartamento extends JInternalFrame {
 		setBounds(0, 0, 1065, 680);
 		getContentPane().setLayout(null);
 
-		JLabel lblTitulo = new JLabel("GESTIÓN CARGOS");
-		lblTitulo.setBounds(10, 10, 250, 30);
+		JLabel lblTitulo = new JLabel("GESTIÓN DEPARTAMENTOS");
+		lblTitulo.setBounds(10, 10, 400, 30);
 		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 24));
 		lblTitulo.setForeground(Color.red);
 		getContentPane().add(lblTitulo);
@@ -140,48 +141,58 @@ public class frmDepartamento extends JInternalFrame {
 		lblCodigo.setBounds(50,200,80,30);
 		pnlRegistro.add(lblCodigo);
 		
-		JLabel lblDetalle = new JLabel("Detalle :");
-		lblDetalle.setBounds(50,240,80,30);
-		pnlRegistro.add(lblDetalle);
+		JLabel lblRazonSocial = new JLabel("Razón Social :");
+		lblRazonSocial.setBounds(50,240,80,30);
+		pnlRegistro.add(lblRazonSocial);
+		
+		JLabel lblCuenta = new JLabel("Cuenta :");
+		lblCuenta.setBounds(50,280,80,30);
+		pnlRegistro.add(lblCuenta);
 		
 		lblEstado = new JLabel("Estado :");
-		lblEstado.setBounds(50,280,80,30);
+		lblEstado.setBounds(50,320,80,30);
 		pnlRegistro.add(lblEstado);
 		
 		lblFechaCreacion = new JLabel("Fecha creación :");
-		lblFechaCreacion.setBounds(50,320,100,30);
+		lblFechaCreacion.setBounds(50,360,100,30);
 		pnlRegistro.add(lblFechaCreacion);
 		
 		lblFechaEdicion = new JLabel("Fecha edición :");
-		lblFechaEdicion.setBounds(50,360,100,30);
+		lblFechaEdicion.setBounds(50,400,100,30);
 		pnlRegistro.add(lblFechaEdicion);
 		
-		txtCodigo = new JTextField();
+		txtCodigo = new JTextField();	
 		txtCodigo.setBounds(150,200,50,30);
 		txtCodigo.setFocusable(false);
 		txtCodigo.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtCodigo);
 		
-		txtDetalle = new JTextField();
-		txtDetalle.setBounds(150,240,250,30);
-		txtDetalle.setColumns(30);
-		txtDetalle.setMargin( new Insets(2,5,2,5) );
-		pnlRegistro.add(txtDetalle);
+		txtRazonSocial = new JTextField();
+		txtRazonSocial.setBounds(150,240,250,30);
+		txtRazonSocial.setColumns(30);
+		txtRazonSocial.setMargin( new Insets(2,5,2,5) );
+		pnlRegistro.add(txtRazonSocial);
 
+		txtCuenta = new JTextField();
+		txtCuenta.setBounds(150,280,150,30);
+		txtCuenta.setColumns(10);
+		txtCuenta.setMargin( new Insets(2,5,2,5) );
+		pnlRegistro.add(txtCuenta);
+		
 		txtEstado = new JTextField();
-		txtEstado.setBounds(150,280,150,30);
+		txtEstado.setBounds(150,320,150,30);
 		txtEstado.setFocusable(false);
 		txtEstado.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtEstado);
 		
 		txtFechaCreacion = new JTextField();
-		txtFechaCreacion.setBounds(150,320,150,30);
+		txtFechaCreacion.setBounds(150,360,150,30);
 		txtFechaCreacion.setFocusable(false);
 		txtFechaCreacion.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtFechaCreacion);
 		
 		txtFechaEdicion = new JTextField();
-		txtFechaEdicion.setBounds(150,360,150,30);
+		txtFechaEdicion.setBounds(150,400,150,30);
 		txtFechaEdicion.setFocusable(false);
 		txtFechaEdicion.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtFechaEdicion);
@@ -195,11 +206,19 @@ public class frmDepartamento extends JInternalFrame {
 		btnGuardar.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { btnGuardar_actionPerformed(); } });
 		btnCancelar.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { btnCancelar_actionPerformed(); } });
 		
+		txtCodigo.addFocusListener(new FocusAdapter() { public void focusGained(FocusEvent e) {	txt_focusGained(txtCodigo);  } });
 		txtBuscar.addKeyListener( new KeyAdapter() {  public void keyTyped(KeyEvent e) { util.txt_LetterSpace(e); } });
-		txtDetalle.addKeyListener(new KeyAdapter() {  public void keyTyped(KeyEvent e) { util.txt_LetterSpace(e); } });
-		txtBuscar.addFocusListener(new FocusAdapter() {  public void focusLost(FocusEvent e) { txt_focusLost( txtBuscar ); } });
-		txtDetalle.addFocusListener(new FocusAdapter() {  public void focusLost(FocusEvent e) { txt_focusLost( txtDetalle ); } });
 		txtBuscar.addCaretListener(new CaretListener() { public void caretUpdate(CaretEvent e) { txtBuscar_caretUpdate(); } });
+		txtBuscar.addFocusListener(new FocusAdapter() { public void focusGained(FocusEvent e) {	txt_focusGained(txtBuscar);  } });
+		txtBuscar.addFocusListener(new FocusAdapter() {  public void focusLost(FocusEvent e) { txt_focusLost( txtBuscar ); } });
+		
+		txtRazonSocial.addKeyListener(new KeyAdapter() {  public void keyTyped(KeyEvent e) { util.txt_LetterSpace(e); } });
+		txtRazonSocial.addCaretListener(new CaretListener() { public void caretUpdate(CaretEvent e) { txtRazonSocial_caretUpdate(); } });
+		txtRazonSocial.addFocusListener(new FocusAdapter() { public void focusGained(FocusEvent e) { txt_focusGained(txtRazonSocial);  } });
+		txtRazonSocial.addFocusListener(new FocusAdapter() {  public void focusLost(FocusEvent e) { txt_focusLost( txtRazonSocial ); } });
+		
+		txtCuenta.addFocusListener(new FocusAdapter() { public void focusGained(FocusEvent e) {	txt_focusGained(txtCuenta);  } });
+		txtCuenta.addFocusListener(new FocusAdapter() {  public void focusLost(FocusEvent e) { txt_focusLost( txtCuenta ); } });
 		
 		tblRegistros.addMouseListener(new MouseAdapter() {  public void mouseClicked(MouseEvent e) { verRegistro( tblRegistros.getSelectedRow() ); } });
 		tblRegistros.addKeyListener(new KeyAdapter() {  public void keyReleased(KeyEvent e) { tblRegistros_keyReleased( e.getKeyCode() ); } });
@@ -207,14 +226,15 @@ public class frmDepartamento extends JInternalFrame {
 	}
 
 	protected void form_componentMoved() {
-		setBounds(0, 0, 1065, 680);		
+		setBounds(0, 0, 1065, 680);
 	}
 
 	protected void form_Opened() {
 		util.BloquearCtrl_V( txtBuscar );
-		util.BloquearCtrl_V( txtDetalle );
+		util.BloquearCtrl_V( txtRazonSocial );
+		util.BloquearCtrl_V( txtCuenta );
 		
-		getCargos();
+		getRegistros();
 		Configurar(true);
 	}
 
@@ -228,19 +248,29 @@ public class frmDepartamento extends JInternalFrame {
 		tblRegistros.setBounds(4,103,pnlRegistros.getWidth() - 7, tblRegistros.getRowCount() > 15 ? pnlRegistros.getHeight() - 5 : 30 * tblRegistros.getRowCount() );
 	}
 
+	protected void txt_focusGained(JTextField txt) {
+		txt.setBackground( new Color(226,244,252) );	
+	}
+	
 	protected void txt_focusLost(JTextField txt) {
+		txt.setBackground( Color.white );
 		txt.setText( txt.getText().trim() );
+	}
+	
+	protected void txtRazonSocial_caretUpdate() {
+		btnGuardar.setEnabled( txtRazonSocial.getText().trim().length() > 0 );
 	}
 
 	protected void btnAgregar_actionPerformed() {
-		cargo.setId( -1 );
+		departamento.setId( -1 );
 		Configurar(false);
 		verRegistro(-1);
 	}
 
 	protected void btnEditar_actionPerformed() {
-		cargo.setId( Integer.parseInt( txtCodigo.getText() ) );
-		cargo.setDetalle( txtDetalle.getText() );
+		departamento.setId( Integer.parseInt( txtCodigo.getText() ) );
+		departamento.setRazonSocial( txtRazonSocial.getText() );
+		departamento.setCuenta( txtCuenta.getText() );
 		Configurar(false);
 	}
 
@@ -250,34 +280,30 @@ public class frmDepartamento extends JInternalFrame {
 
 	protected void btnGuardar_actionPerformed() {
 		boolean bExiste = false;
-		String sDetalle = txtDetalle.getText();
-		
-		if ( sDetalle.isEmpty() ) {
-			JOptionPane.showMessageDialog(this, "Registro en blanco, reintentar", "Mensaje",JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
+		String sDetalle = txtRazonSocial.getText();
+			
 		for (int i=0, count = tblRegistros.getRowCount(); i < count && !bExiste; i++ )
 			bExiste = tblRegistros.getValueAt(i, 1).equals(sDetalle);
 		
 		if ( bExiste ) {
 			JOptionPane.showMessageDialog(this, "Registro ya existe", "Mensaje",JOptionPane.INFORMATION_MESSAGE);
-			txtDetalle.requestFocus();
+			txtRazonSocial.requestFocus();
 			return;
 		}
 		
-		cargo.setDetalle( sDetalle );
-		daoCargo.Guardar(cargo);
-		getCargos();
+		departamento.setRazonSocial( sDetalle );
+		departamento.setCuenta( txtCuenta.getText() );
+		daoDepartamento.Guardar(departamento);
+		getRegistros();
 		
-		if ( cargo.isValido() ) {
+		if ( departamento.isValido() ) {
 			int index = -1;
 			while ( !tblRegistros.getValueAt(++index, 1).equals(sDetalle) );
 			tblRegistros.setRowSelectionInterval(index, index);
 			verRegistro( tblRegistros.getSelectedRow() );
 		}
 		Configurar(true);
-		JOptionPane.showMessageDialog(this, cargo.isValido() ? "Registro guardado" : "Error al registrar, reeintentar...", "Guardar", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, departamento.isValido() ? "Registro guardado" : "Error al registrar, reeintentar...", "Guardar", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	protected void btnCancelar_actionPerformed() {
@@ -285,8 +311,9 @@ public class frmDepartamento extends JInternalFrame {
 		verRegistro( tblRegistros.getSelectedRow() );
 	}
 
-	private void getCargos() {
-		tblRegistros.setModel( daoCargo.getCargos() );
+	private void getRegistros() {
+		tblRegistros.setModel( daoDepartamento.getDepartamentos() );
+		
 		tableRowSorter.setModel( (DefaultTableModel) tblRegistros.getModel() );
 		tblRegistros.setRowSorter( tableRowSorter );
 		
@@ -294,10 +321,10 @@ public class frmDepartamento extends JInternalFrame {
 			tblRegistros.setRowHeight(30);
 			tblRegistros.setBounds(4,103,pnlRegistros.getWidth() - 7, tblRegistros.getRowCount() > 15 ? pnlRegistros.getHeight() - 5 : 30 * tblRegistros.getRowCount() );
 
-			int[] columnas = {0,2,3,4,5};
+			int[] columnas = {0,2,3,4,5,6};
 			for( int columna : columnas ) {
 				tblRegistros.getColumnModel().getColumn(columna).setMinWidth(0);
-				tblRegistros.getColumnModel().getColumn(columna).setMaxWidth(0);	
+				tblRegistros.getColumnModel().getColumn(columna).setMaxWidth(0);
 			}
 			
 		}
@@ -306,12 +333,13 @@ public class frmDepartamento extends JInternalFrame {
 	private void verRegistro(int selectedRow) {
 		boolean bLimpiar = selectedRow == -1;
 		txtCodigo.setText( bLimpiar ? "" : tblRegistros.getValueAt(selectedRow, 0).toString() );
-		txtDetalle.setText( bLimpiar ? "" : tblRegistros.getValueAt(selectedRow, 1).toString() );
+		txtRazonSocial.setText( bLimpiar ? "" : tblRegistros.getValueAt(selectedRow, 1).toString() );
+		txtCuenta.setText( bLimpiar ? "" : tblRegistros.getValueAt(selectedRow, 2).toString() );
 		
 		if ( !bLimpiar && frmPlanilla.empleado.getRol() > 0 ) {
-			txtEstado.setText( util.ESTADOS.get( tblRegistros.getValueAt(selectedRow, 2).toString() ) );
-			txtFechaCreacion.setText( tblRegistros.getValueAt(selectedRow, 3).toString() );	
-			txtFechaEdicion.setText( tblRegistros.getValueAt(selectedRow, 4).toString() );	
+			txtEstado.setText( util.ESTADOS.get( tblRegistros.getValueAt(selectedRow, 3).toString() ) );
+			txtFechaCreacion.setText( tblRegistros.getValueAt(selectedRow, 4).toString() );	
+			txtFechaEdicion.setText( tblRegistros.getValueAt(selectedRow, 5).toString() );	
 		}
 	}
 	
@@ -321,10 +349,12 @@ public class frmDepartamento extends JInternalFrame {
 		btnEditar.setVisible(bOnOff && bHayRegistros);
 		btnEliminar.setVisible(bOnOff && bHayRegistros);
 		btnGuardar.setVisible(!bOnOff);
+		btnGuardar.setEnabled(false);
 		btnCancelar.setVisible(!bOnOff);
 		
 		txtBuscar.setFocusable(bOnOff && bHayRegistros);
-		txtDetalle.setFocusable(!bOnOff);
+		txtRazonSocial.setFocusable(!bOnOff);
+		txtCuenta.setFocusable(!bOnOff);
 		tblRegistros.setFocusable(bOnOff && bHayRegistros);
 
 		boolean bRol = bOnOff && frmPlanilla.empleado.getRol() > 0;
@@ -335,7 +365,7 @@ public class frmDepartamento extends JInternalFrame {
 		txtFechaCreacion.setVisible( bRol );
 		txtFechaEdicion.setVisible( bRol );
 		
-		( bOnOff ? txtBuscar : txtDetalle).requestFocus();
+		( bOnOff ? txtBuscar : txtRazonSocial).requestFocus();
 	}
 
 }

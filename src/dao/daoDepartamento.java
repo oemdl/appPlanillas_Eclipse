@@ -13,7 +13,7 @@ public class daoDepartamento {
 	}
 
 	public void Guardar(Departamento departamento) {
-		db.Sentencia( String.format("call sp_guardarDepartamentos( %s,'%s','%s')",
+		db.Sentencia( String.format("call sp_guardarDepartamento( %s,'%s','%s')",
 				departamento.getId(), departamento.getRazonSocial(), departamento.getCuenta() ) ) ;
 		departamento.setValido( db.Ejecutar() == 1 );
 	}
