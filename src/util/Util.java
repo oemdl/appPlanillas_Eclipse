@@ -48,4 +48,18 @@ public class Util {
 			e.consume();
 	}
 
+	public void txt_LetterSpaceNumber(KeyEvent e) {
+		JTextField txt = (JTextField) e.getSource();
+		int longitud = txt.getText().length();
+		boolean bLetter = Character.isLetter( e.getKeyChar() ); 
+		boolean bSpace  = Character.isSpaceChar( e.getKeyChar() );
+		boolean bDigit = Character.isDigit( e.getKeyChar() );
+		
+		if ( longitud == txt.getColumns() ||
+			 !( bLetter || bSpace || bDigit ) ||
+			 ( bSpace && longitud == 0 ) ||
+			 ( bSpace && longitud > 0 && txt.getText().endsWith(" ") ) )
+			e.consume();
+	}
+
 }

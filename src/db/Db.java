@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 
 public class Db {
@@ -44,7 +46,14 @@ public class Db {
 	}
 
 	public DefaultTableModel getDefaultTableModel() {
-		if ( cn == null ) return null;
+		DefaultTableModel modelo = new DefaultTableModel() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+		    public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }
+		};
+
+		if ( cn == null || ps == null ) return modelo;
 		
 		try {
 			ResultSet rs = ps.executeQuery();
@@ -52,12 +61,6 @@ public class Db {
 			
 			if ( rsmd.getColumnCount() > 0 ) {
 				int columnas = rsmd.getColumnCount();
-				DefaultTableModel modelo = new DefaultTableModel() {
-					private static final long serialVersionUID = 1L;
-					
-					@Override
-				    public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }
-				};
 				
 				for(int i=0; i < columnas; i++)
 					modelo.addColumn( rsmd.getColumnName(i+1) );
@@ -73,7 +76,7 @@ public class Db {
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 		
-		return null;
+		return modelo;
 	}
 
 	public int Ejecutar() {
@@ -86,4 +89,23 @@ public class Db {
 		return -1;
 	}
 
+	public void getComboBox(JComboBox<String> cbo, ArrayList<String> aID, String sTexto) {
+		if ( cn == null || ps == null ) return;
+	
+		cbo.removeAll();
+		aID = new ArrayList<>();
+		cbo.addItem(sTexto);
+		aID.add("");
+
+		try {
+			ResultSet rs = ps.executeQuery();
+			if ( rs.last() ) {
+				rs.beforeFirst();
+				while( rs.next() ) {
+					aID.add( rs.getString(1) );
+					cbo.addItem( rs.getString(2).trim() );
+				}
+			}
+		} catch (SQLException e) { e.printStackTrace(); }
+	}
 }

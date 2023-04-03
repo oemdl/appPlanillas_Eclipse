@@ -137,51 +137,51 @@ public class frmCargo extends JInternalFrame {
 		pnlRegistro.add(btnCancelar);
 		
 		JLabel lblCodigo = new JLabel("Código :");
-		lblCodigo.setBounds(50,200,80,30);
+		lblCodigo.setBounds(50,150,80,25);
 		pnlRegistro.add(lblCodigo);
 		
 		JLabel lblDetalle = new JLabel("Detalle :");
-		lblDetalle.setBounds(50,240,80,30);
+		lblDetalle.setBounds(50,180,80,25);
 		pnlRegistro.add(lblDetalle);
 		
 		lblEstado = new JLabel("Estado :");
-		lblEstado.setBounds(50,280,80,30);
+		lblEstado.setBounds(50,210,80,25);
 		pnlRegistro.add(lblEstado);
 		
 		lblFechaCreacion = new JLabel("Fecha creación :");
-		lblFechaCreacion.setBounds(50,320,100,30);
+		lblFechaCreacion.setBounds(50,240,100,25);
 		pnlRegistro.add(lblFechaCreacion);
 		
 		lblFechaEdicion = new JLabel("Fecha edición :");
-		lblFechaEdicion.setBounds(50,360,100,30);
+		lblFechaEdicion.setBounds(50,270,100,25);
 		pnlRegistro.add(lblFechaEdicion);
 		
 		txtCodigo = new JTextField();
-		txtCodigo.setBounds(150,200,50,30);
+		txtCodigo.setBounds(150,150,50,25);
 		txtCodigo.setFocusable(false);
 		txtCodigo.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtCodigo);
 		
 		txtDetalle = new JTextField();
-		txtDetalle.setBounds(150,240,250,30);
+		txtDetalle.setBounds(150,180,250,25);
 		txtDetalle.setColumns(30);
 		txtDetalle.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtDetalle);
 
 		txtEstado = new JTextField();
-		txtEstado.setBounds(150,280,150,30);
+		txtEstado.setBounds(150,210,150,25);
 		txtEstado.setFocusable(false);
 		txtEstado.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtEstado);
 		
 		txtFechaCreacion = new JTextField();
-		txtFechaCreacion.setBounds(150,320,150,30);
+		txtFechaCreacion.setBounds(150,240,150,25);
 		txtFechaCreacion.setFocusable(false);
 		txtFechaCreacion.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtFechaCreacion);
 		
 		txtFechaEdicion = new JTextField();
-		txtFechaEdicion.setBounds(150,360,150,30);
+		txtFechaEdicion.setBounds(150,270,150,25);
 		txtFechaEdicion.setFocusable(false);
 		txtFechaEdicion.setMargin( new Insets(2,5,2,5) );
 		pnlRegistro.add(txtFechaEdicion);

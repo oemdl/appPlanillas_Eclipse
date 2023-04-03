@@ -500,6 +500,7 @@ public class frmPlanilla extends JFrame implements Runnable {
 					case 1 : break;
 					case 2 :
 						switch ( SubMenu ) {
+							case 2: formulario = new frmSede(); break; 
 							case 3: formulario = new frmCentroCosto(); break; 
 							case 4: formulario = new frmCargo(); break;
 							case 5: formulario = new frmDepartamento(); break;
