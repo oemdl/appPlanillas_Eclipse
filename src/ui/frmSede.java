@@ -33,6 +33,8 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.Font;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class frmSede extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
@@ -52,7 +54,8 @@ public class frmSede extends JInternalFrame {
 	ArrayList<String> aIDDepartamento, aIDProvincia, aIDDistrito;
 
 	TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>();
-	boolean bHayRegistros;
+
+	boolean bHayRegistros, bCombos;
 	
 	public frmSede() {
 		setBounds(0, 0, 1065, 680);
@@ -244,7 +247,12 @@ public class frmSede extends JInternalFrame {
 		
 		tblRegistros.addMouseListener(new MouseAdapter() {  public void mouseClicked(MouseEvent e) { verRegistro( tblRegistros.getSelectedRow() ); } });
 		tblRegistros.addKeyListener(new KeyAdapter() {  public void keyReleased(KeyEvent e) { tblRegistros_keyReleased( e.getKeyCode() ); } });
+		
+		cboDepartamento.addItemListener(new ItemListener() { public void itemStateChanged(ItemEvent e) { cboDepartamento_itemStateChanged(); } });
+		cboProvincia.addItemListener(new ItemListener() { public void itemStateChanged(ItemEvent e) { cboProvincia_itemStateChanged(); } });
+
 	}
+
 
 	protected void form_componentMoved() {
 		setBounds(0, 0, 1065, 680);		
@@ -256,7 +264,8 @@ public class frmSede extends JInternalFrame {
 		util.BloquearCtrl_V( txtDireccion );
 		
 		getSedes();
-		daoDPD.getDepartamentos(cboDepartamento, aIDDepartamento, "Seleccionar");
+		aIDDepartamento = daoDPD.getDepartamentos(cboDepartamento, "Seleccionar");
+		bCombos = true;
 		Configurar(true);
 	}
 
@@ -330,6 +339,30 @@ public class frmSede extends JInternalFrame {
 		verRegistro( tblRegistros.getSelectedRow() );
 	}
 
+	protected void cboDepartamento_itemStateChanged() {
+		if ( bCombos ) {
+			bCombos = false;
+			int index = cboDepartamento.getSelectedIndex();
+			cboProvincia.removeAllItems();
+			if ( index > 0 ) aIDProvincia = daoDPD.getProvincias(cboProvincia, "Seleccionar", aIDDepartamento.get( index ) );
+			cboProvincia.setEnabled( index > 0 );
+			cboDistrito.removeAllItems();
+			cboDistrito.setEnabled( false );
+			bCombos = true;
+		}
+	}
+
+	protected void cboProvincia_itemStateChanged() {
+		if ( bCombos ) {
+			bCombos = false;
+			int index = cboProvincia.getSelectedIndex();
+			cboDistrito.removeAllItems();
+			if ( index > 0 ) aIDDistrito = daoDPD.getDistritos(cboDistrito, "Seleccionar", aIDProvincia.get( index ) );
+			cboDistrito.setEnabled( index > 0 );
+			bCombos = true;
+		}
+	}
+	
 	private void getSedes() {
 		tblRegistros.setModel( daoSede.getSedes() );
 		tableRowSorter.setModel( (DefaultTableModel) tblRegistros.getModel() );
@@ -339,7 +372,7 @@ public class frmSede extends JInternalFrame {
 			tblRegistros.setRowHeight(30);
 			tblRegistros.setBounds(4,103,pnlRegistros.getWidth() - 7, tblRegistros.getRowCount() > 15 ? pnlRegistros.getHeight() - 5 : 30 * tblRegistros.getRowCount() );
 
-			int[] columnas = {0,2,3,4,5};
+			int[] columnas = {0,2};
 			for( int columna : columnas ) {
 				tblRegistros.getColumnModel().getColumn(columna).setMinWidth(0);
 				tblRegistros.getColumnModel().getColumn(columna).setMaxWidth(0);	
@@ -373,7 +406,12 @@ public class frmSede extends JInternalFrame {
 		txtDireccion.setFocusable(!bOnOff);
 		tblRegistros.setFocusable(bOnOff && bHayRegistros);
 
+		cboDepartamento.setEnabled(!bOnOff);
+		cboProvincia.setEnabled(!bOnOff);
+		cboDistrito.setEnabled(!bOnOff);
+		
 		boolean bRol = bOnOff && frmPlanilla.empleado.getRol() > 0;
+		cboDistrito.setEnabled( bRol );
 		lblEstado.setVisible( bRol  );
 		lblFechaCreacion.setVisible( bRol );
 		lblFechaEdicion.setVisible( bRol );

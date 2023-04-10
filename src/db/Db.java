@@ -89,13 +89,14 @@ public class Db {
 		return -1;
 	}
 
-	public void getComboBox(JComboBox<String> cbo, ArrayList<String> aID, String sTexto) {
-		if ( cn == null || ps == null ) return;
+	public ArrayList<String> getComboBox(JComboBox<String> cbo, String sTexto) {
+		if ( cn == null || ps == null ) return null;
 	
-		cbo.removeAll();
-		aID = new ArrayList<>();
-		cbo.addItem(sTexto);
+		ArrayList<String> aID = new ArrayList<>();
 		aID.add("");
+		
+		cbo.removeAllItems();
+		cbo.addItem(sTexto);
 
 		try {
 			ResultSet rs = ps.executeQuery();
@@ -107,5 +108,12 @@ public class Db {
 				}
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
+		
+		return aID;
 	}
+
+	public String[] getRegistro() {
+		return null;
+	}
+	
 }
