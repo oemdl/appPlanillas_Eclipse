@@ -12,7 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.table.DefaultTableModel;
 
 public class Db {
-	String _IP="localhost", _PORT="3306", _BD="", _USER="root", _PASSWORD="";
+	String _IP="localhost", _PORT="3306", _BD="", _USER="root", _PASSWORD="", _SQL="";
 	Connection cn = null;
 	PreparedStatement ps = null;
 
@@ -40,11 +40,28 @@ public class Db {
 	public void Sentencia(String sql) {
 		if ( cn == null ) return;
 		
+		this._SQL = sql;
 		try {
 			ps = cn.prepareStatement(sql);
 		} catch (SQLException e) { e.printStackTrace(); }
 	}
 
+	public void Parametros(String sColumnas) {
+		Object[] columnas = sColumnas.split( "," );
+		if ( cn == null || columnas == null || columnas.length == 0 ) return;
+
+		_SQL += "(?";
+		for ( int i=1; i < columnas.length; i++, _SQL += ",?" );
+		_SQL += ")";
+	
+		try {
+			ps = cn.prepareStatement( _SQL );
+			for ( int i=0; i < columnas.length; i++ )
+				ps.setObject( i+1, columnas[i] );
+		} catch (SQLException e) { e.printStackTrace(); }
+
+	}
+		
 	public DefaultTableModel getDefaultTableModel() {
 		DefaultTableModel modelo = new DefaultTableModel() {
 			private static final long serialVersionUID = 1L;
@@ -113,7 +130,21 @@ public class Db {
 	}
 
 	public String[] getRegistro() {
+		if ( cn == null || ps == null ) return null;
+		
+		try {
+			ResultSet rs = ps.executeQuery();
+			if ( rs.next() ) {
+				int columnas = rs.getMetaData().getColumnCount();
+				String[] aRegistro = new String[ columnas ];
+				for( int i=0; i < columnas; i++ )
+					aRegistro[i] = rs.getString( i + 1 ).trim();
+				
+				return aRegistro;
+			}
+		} catch (SQLException e) { e.printStackTrace();	}
+		
 		return null;
 	}
-	
+
 }

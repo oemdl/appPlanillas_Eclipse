@@ -18,7 +18,9 @@ public class daoSede {
 	}
 
 	public void Guardar(Sede sede) {
-		
+		db.Sentencia( "call sp_guardarSede" );
+		db.Parametros( sede.toString() );
+		sede.setValido( db.Ejecutar() == 1 );
 	}
 
 }

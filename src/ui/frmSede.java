@@ -267,6 +267,11 @@ public class frmSede extends JInternalFrame {
 		aIDDepartamento = daoDPD.getDepartamentos(cboDepartamento, "Seleccionar");
 		bCombos = true;
 		Configurar(true);
+		
+		// cboEstado
+		cboEstado.addItem("Seleccionar");
+		cboEstado.addItem("Activo");
+		cboEstado.addItem("Inactivo");
 	}
 
 	protected void tblRegistros_keyReleased(int code) {
@@ -284,7 +289,7 @@ public class frmSede extends JInternalFrame {
 	}
 
 	protected void btnAgregar_actionPerformed() {
-		//sede.setId( -1 );
+		sede.setId( -1 );
 		Configurar(false);
 		verRegistro(-1);
 	}
@@ -301,36 +306,42 @@ public class frmSede extends JInternalFrame {
 	}
 
 	protected void btnGuardar_actionPerformed() {
-		boolean bExiste = false;
-		String sDetalle = txtSede.getText();
+		String sRazonSocial = txtSede.getText();
 		String sDireccion = txtDireccion.getText();
+		int idDepartamento = cboDepartamento.getSelectedIndex();
+		int idProvincia = cboProvincia.getSelectedIndex();
+		int idDistrito = cboDistrito.getSelectedIndex();
 		
-		if ( sDetalle.isEmpty() || sDireccion.isEmpty() ) {
-			JOptionPane.showMessageDialog(this, "Registro en blanco, reintentar", "Mensaje",JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+		String sMensaje = "";
+		if ( sRazonSocial.isEmpty() ) sMensaje = "Ingrese datos en el campo Razón Social";
+		else if ( sDireccion.isEmpty() ) sMensaje = "Ingrese datos en el campo Dirección";
+		else if ( idDepartamento == -1 ) sMensaje = "Seleccione un Departamento";
+		else if ( idProvincia == -1 ) sMensaje = "Seleccione un Departamento";
+		else if ( idDistrito == -1 ) sMensaje = "Seleccione un Departamento";
+		//else if ( daoSede.Validar( sRazonSocial) ) sMensaje = "Razón Social ya registrada";
 		
-		for (int i=0, count = tblRegistros.getRowCount(); i < count && !bExiste; i++ )
-			bExiste = tblRegistros.getValueAt(i, 1).equals(sDetalle);
-		
-		if ( bExiste ) {
-			JOptionPane.showMessageDialog(this, "Registro ya existe", "Mensaje",JOptionPane.INFORMATION_MESSAGE);
+		if ( !sMensaje.equals("") ) {
+			JOptionPane.showMessageDialog(this, sMensaje, "Mensaje",JOptionPane.ERROR_MESSAGE);
 			txtSede.requestFocus();
 			return;
 		}
-		
-		//sede.setDetalle( sDetalle );
-		//sede.setDireccion( sDireccion );
-		//daoSede.Guardar(sede);
-		getSedes();
+			
+		sede.setRazonSocial( sRazonSocial );
+		sede.setDireccion( sDireccion );
+		sede.setIdDepartamento( idDepartamento );
+		sede.setIdProvincia( idProvincia );
+		sede.setIdDistrito( idDistrito );
+		daoSede.Guardar(sede);
 		
 		if ( sede.isValido() ) {
+			getSedes();
 			int index = -1;
-			while ( !tblRegistros.getValueAt(++index, 1).equals(sDetalle) );
+			while ( !tblRegistros.getValueAt(++index, 1).equals(sRazonSocial) );
 			tblRegistros.setRowSelectionInterval(index, index);
 			verRegistro( tblRegistros.getSelectedRow() );
+			Configurar(true);
 		}
-		Configurar(true);
+		
 		JOptionPane.showMessageDialog(this, sede.isValido() ? "Registro guardado" : "Error al registrar, reeintentar...", "Guardar", JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -357,7 +368,7 @@ public class frmSede extends JInternalFrame {
 			bCombos = false;
 			int index = cboProvincia.getSelectedIndex();
 			cboDistrito.removeAllItems();
-			if ( index > 0 ) aIDDistrito = daoDPD.getDistritos(cboDistrito, "Seleccionar", aIDProvincia.get( index ) );
+			 if ( index > 0 ) aIDDistrito = daoDPD.getDistritos(cboDistrito, "Seleccionar", aIDProvincia.get( index ) );
 			cboDistrito.setEnabled( index > 0 );
 			bCombos = true;
 		}
@@ -411,7 +422,7 @@ public class frmSede extends JInternalFrame {
 		cboDistrito.setEnabled(!bOnOff);
 		
 		boolean bRol = bOnOff && frmPlanilla.empleado.getRol() > 0;
-		cboDistrito.setEnabled( bRol );
+		cboEstado.setVisible( bRol );
 		lblEstado.setVisible( bRol  );
 		lblFechaCreacion.setVisible( bRol );
 		lblFechaEdicion.setVisible( bRol );
