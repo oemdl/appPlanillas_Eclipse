@@ -92,7 +92,6 @@ public class frmLogin extends JFrame {
 		getContentPane().add(txtPassword);
 
 		btnIniciar = new JButton("Iniciar");		
-		
 		btnIniciar.setBounds(80, 220, 100, 30);
 		btnIniciar.setBackground( new Color(90, 17, 93) );
 		btnIniciar.setBorderPainted(false);
@@ -194,13 +193,12 @@ public class frmLogin extends JFrame {
 		
 		empleado.setDni( txtUsuario.getText() );
 		empleado.setPassword( new String( txtPassword.getPassword() ) );
-		new dao.daoEmpleado().Login( empleado );
 		
-		if ( empleado.isValido() ) {
+		if ( new dao.EmpleadoDAO().Login( empleado ) ) {
 			frmPlanilla frame = new frmPlanilla();
 			frame.setEmpleado( empleado );
 			frame.setVisible(true);
-		}
+		} else JOptionPane.showMessageDialog(this, "Dni y/o password inválidos");
 		
 	}
 	

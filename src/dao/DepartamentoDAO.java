@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 import bean.Departamento;
 
-public class daoDepartamento {
+public class DepartamentoDAO {
 	db.Db db = new db.Db("Planilla");
 
 	public DefaultTableModel getDepartamentos() {

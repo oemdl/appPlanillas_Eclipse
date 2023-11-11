@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 import bean.Sede;
 
-public class daoSede {
+public class SedeDAO {
 	db.Db db = new db.Db("Planilla");
 
 	public DefaultTableModel getSedes() {

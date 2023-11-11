@@ -36,7 +36,7 @@ public class frmCentroCosto extends JInternalFrame {
 
 	util.Util util = new util.Util();
 	bean.CentroCosto centroCosto = new bean.CentroCosto();
-	dao.daoCentroCosto daoCentroCosto = new dao.daoCentroCosto();
+	dao.CentroCostoDAO daoCentroCosto = new dao.CentroCostoDAO();
 	
 	JPanel pnlRegistros;
 	JTable tblRegistros;

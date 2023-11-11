@@ -38,7 +38,7 @@ public class frmDepartamento extends JInternalFrame {
 
 	util.Util util = new util.Util();
 	bean.Departamento departamento = new bean.Departamento();
-	dao.daoDepartamento daoDepartamento = new dao.daoDepartamento();
+	dao.DepartamentoDAO daoDepartamento = new dao.DepartamentoDAO();
 	
 	JPanel pnlRegistros;
 	JTable tblRegistros;

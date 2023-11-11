@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 
-public class daoDPD {
+public class DpdDAO {
 	db.Db db = new db.Db("DPD");
 	
 	public ArrayList<String> getDepartamentos(JComboBox<String> cboDepartamento, String sTexto) {

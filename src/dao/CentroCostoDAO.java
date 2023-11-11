@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 import bean.CentroCosto;
 
-public class daoCentroCosto {
+public class CentroCostoDAO {
 
 	db.Db db = new db.Db("Planilla");
 

@@ -4,7 +4,7 @@ import javax.swing.table.DefaultTableModel;
 
 import bean.Cargo;
 
-public class daoCargo {
+public class CargoDAO {
 	db.Db db = new db.Db("Planilla");
 
 	public DefaultTableModel getCargos() {

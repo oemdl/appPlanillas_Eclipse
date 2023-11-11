@@ -20,6 +20,20 @@ public class Db {
 		_BD = bd;
 		getConexion();
 	}
+	
+	public Db(String bd, String port) {
+		_BD = bd;
+		_PORT = port;
+		getConexion();
+	}
+
+	public Db(String ip, String bd, String user, String password) {
+		_IP = ip;
+		_BD = bd;
+		_USER = user;
+		_PASSWORD = password;
+		getConexion();
+	}
 
 	public Db(String ip, String port, String bd, String user, String password) {
 		_IP = ip;
@@ -40,6 +54,7 @@ public class Db {
 	public void Sentencia(String sql) {
 		if ( cn == null ) return;
 		
+		this.ps = null;
 		this._SQL = sql;
 		try {
 			ps = cn.prepareStatement(sql);
@@ -47,57 +62,24 @@ public class Db {
 	}
 
 	public void Parametros(String sColumnas) {
-		Object[] columnas = sColumnas.split( "," );
-		if ( cn == null || columnas == null || columnas.length == 0 ) return;
-
+		ps = null;
+		if ( cn == null || sColumnas == null || sColumnas.isEmpty() ) return;
+		
+		Object[] columnas = sColumnas.split(",");
 		_SQL += "(?";
 		for ( int i=1; i < columnas.length; i++, _SQL += ",?" );
 		_SQL += ")";
-	
+		
 		try {
 			ps = cn.prepareStatement( _SQL );
 			for ( int i=0; i < columnas.length; i++ )
 				ps.setObject( i+1, columnas[i] );
-		} catch (SQLException e) { e.printStackTrace(); }
-
-	}
-		
-	public DefaultTableModel getDefaultTableModel() {
-		DefaultTableModel modelo = new DefaultTableModel() {
-			private static final long serialVersionUID = 1L;
 			
-			@Override
-		    public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }
-		};
-
-		if ( cn == null || ps == null ) return modelo;
-		
-		try {
-			ResultSet rs = ps.executeQuery();
-			ResultSetMetaData rsmd = rs.getMetaData();
-			
-			if ( rsmd.getColumnCount() > 0 ) {
-				int columnas = rsmd.getColumnCount();
-				
-				for(int i=0; i < columnas; i++)
-					modelo.addColumn( rsmd.getColumnName(i+1) );
-				
-				String[] aRegistro = new String[columnas];
-				while ( rs.next() ) {
-					for(int columna=0; columna < columnas; columna++)
-						aRegistro[columna] = rs.getString( columna + 1 ).trim();
-					modelo.addRow( aRegistro );
-				}
-					
-				return modelo;
-			}
 		} catch (SQLException e) { e.printStackTrace(); }
-		
-		return modelo;
 	}
 
 	public int Ejecutar() {
-		if ( cn == null ) return -1;
+		if ( cn == null || ps == null ) return -1;
 		
 		try {
 			return ps.executeUpdate();
@@ -106,23 +88,61 @@ public class Db {
 		return -1;
 	}
 
+	public DefaultTableModel getDefaultTableModel() {
+		if ( cn == null || ps == null ) return null;
+
+
+		try {
+			ResultSet rs = ps.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			
+			if ( rsmd.getColumnCount() > 0 ) {
+				DefaultTableModel modelo = new DefaultTableModel() {
+					private static final long serialVersionUID = 1L;
+					
+					@Override
+					public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }
+				};
+
+				int columnas = rsmd.getColumnCount();
+				for(int i=0; i < columnas; i++)
+					modelo.addColumn( rsmd.getColumnName(i+1) );
+				
+				String[] aRegistro = new String[columnas];
+				while ( rs.next() ) {
+					for(int columna=0; columna < columnas; columna++)
+						aRegistro[columna] = rs.getString( columna + 1 ).trim();
+					
+					modelo.addRow( aRegistro );
+				}
+					
+				return modelo;
+			}
+		} catch (SQLException e) { e.printStackTrace(); }
+		
+		return null;
+	}
+
+	public ArrayList<String> getComboBox(JComboBox<String> cbo) {
+		return getComboBox(cbo, null);
+	}
+	
 	public ArrayList<String> getComboBox(JComboBox<String> cbo, String sTexto) {
 		if ( cn == null || ps == null ) return null;
 	
 		ArrayList<String> aID = new ArrayList<>();
-		aID.add("");
 		
 		cbo.removeAllItems();
-		cbo.addItem(sTexto);
+		if ( sTexto != null ) {
+			aID.add("");
+			cbo.addItem(sTexto);
+		}
 
 		try {
 			ResultSet rs = ps.executeQuery();
-			if ( rs.last() ) {
-				rs.beforeFirst();
-				while( rs.next() ) {
-					aID.add( rs.getString(1) );
-					cbo.addItem( rs.getString(2).trim() );
-				}
+			while( rs.next() ) {
+				aID.add( rs.getString(1) );
+				cbo.addItem( rs.getString(2).trim() );
 			}
 		} catch (SQLException e) { e.printStackTrace(); }
 		

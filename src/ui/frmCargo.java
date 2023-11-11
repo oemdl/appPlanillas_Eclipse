@@ -37,7 +37,7 @@ public class frmCargo extends JInternalFrame {
 
 	util.Util util = new util.Util();
 	bean.Cargo cargo = new bean.Cargo();
-	dao.daoCargo daoCargo = new dao.daoCargo();
+	dao.CargoDAO cargoDAO = new dao.CargoDAO();
 	
 	JPanel pnlRegistros;
 	JTable tblRegistros;
@@ -266,7 +266,7 @@ public class frmCargo extends JInternalFrame {
 		}
 		
 		cargo.setDetalle( sDetalle );
-		daoCargo.Guardar(cargo);
+		cargoDAO.Guardar(cargo);
 		getCargos();
 		
 		if ( cargo.isValido() ) {
@@ -285,7 +285,7 @@ public class frmCargo extends JInternalFrame {
 	}
 
 	private void getCargos() {
-		tblRegistros.setModel( daoCargo.getCargos() );
+		tblRegistros.setModel( cargoDAO.getCargos() );
 		tableRowSorter.setModel( (DefaultTableModel) tblRegistros.getModel() );
 		tblRegistros.setRowSorter( tableRowSorter );
 		

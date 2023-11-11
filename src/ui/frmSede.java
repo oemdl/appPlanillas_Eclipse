@@ -41,8 +41,8 @@ public class frmSede extends JInternalFrame {
 
 	util.Util util = new util.Util();
 	bean.Sede sede = new bean.Sede();
-	dao.daoSede daoSede = new dao.daoSede();
-	dao.daoDPD daoDPD = new dao.daoDPD();
+	dao.SedeDAO daoSede = new dao.SedeDAO();
+	dao.DpdDAO daoDPD = new dao.DpdDAO();
 	
 	JPanel pnlRegistros;
 	JTable tblRegistros;

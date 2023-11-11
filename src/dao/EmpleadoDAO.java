@@ -2,14 +2,14 @@ package dao;
 
 import bean.Empleado;
 
-public class daoEmpleado {
+public class EmpleadoDAO {
 
 	public void Guardar(Empleado empleado) {
 		
 	}
 
-	public void Login(Empleado empleado) {
-		empleado.setValido( true );
+	public boolean Login(Empleado empleado) {
+		return false;
 		
 	}
 

@@ -63,4 +63,5 @@ public class Cargo {
 		Valido = valido;
 	}
 	
+
 }
